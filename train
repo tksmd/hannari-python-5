@@ -1,0 +1,67 @@
+#!/usr/bin/env python
+
+import sys
+import json
+import traceback
+import pickle
+from pathlib import Path
+
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+
+
+def get_tree_classifier(training_params):
+    max_leaf_nodes = training_params.get('max_leaf_nodes', None)
+    if max_leaf_nodes is not None:
+        max_leaf_nodes = int(max_leaf_nodes)
+    return DecisionTreeClassifier(max_leaf_nodes=max_leaf_nodes)
+
+
+def train(base_path='/opt/ml'):
+    print(f'start training for {base_path}')
+
+    # Container environment
+    prefix = Path(base_path)
+
+    input_path = prefix.joinpath('input', 'data')
+    output_path = prefix.joinpath('output')
+    model_path = prefix.joinpath('model')
+    param_path = prefix.joinpath('input', 'config', 'hyperparameters.json')
+
+    channel_name = 'train'
+    training_path = input_path.joinpath(channel_name)
+
+    try:
+
+        input_files = [str(f) for f in training_path.glob('*.csv')]
+        if len(input_files) == 0:
+            raise ValueError(f'No input files in {training_path}.')
+
+        with param_path.open() as f:
+            training_params = json.load(f)
+
+        train_df = pd.concat([pd.read_csv(file, header=None) for file in input_files])
+
+        y = train_df.ix[:, 0]
+        X = train_df.ix[:, 1:]
+
+        clf = get_tree_classifier(training_params)
+        clf.fit(X, y)
+
+        with model_path.joinpath('decision-tree-model.pkl').open('wb') as f:
+            pickle.dump(clf, f)
+
+        print('Training complete.')
+        sys.exit(0)
+    except Exception as e:
+        trc = traceback.format_exc()
+        msg = 'Exception during training: ' + str(e) + '\n' + trc
+        with output_path.joinpath('failure').open('w') as f:
+            f.write(msg)
+        print(msg, file=sys.stderr)
+        sys.exit(255)
+
+
+if __name__ == '__main__':
+    train()
+#    train(base_path='test_dir')

@@ -1,0 +1,12 @@
+.DS_Store
+*.pyc
+*.log
+venv
+idea
+.idea
+.ipynb_checkpoints
+output/*.png
+output/*.npy
+
+test_dir/model/*.pkl
+test_dir/output/*
