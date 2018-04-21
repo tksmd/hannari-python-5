@@ -2,7 +2,7 @@
 
 This project includes demonstration code for the presentation at [Hannari Python #5](https://hannari-python.connpass.com/event/82672/) at Apr 20th 2018.
 
-This demonstration includes sample code to bring your own algorithm to [Amazon SageMaker](https://aws.amazon.com/sagemaker/). The implemented algorithm here is completely same to the one provided by [awslabs](https://github.com/awslabs/amazon-sagemaker-examples/tree/master/advanced_functionality/scikit_bring_your_own) but whole scripts have been simplified so that you can just focus on three scripts below.
+You can see sample code to bring your own algorithm to [Amazon SageMaker](https://aws.amazon.com/sagemaker/). The implemented algorithm here is completely same to the one provided by [awslabs](https://github.com/awslabs/amazon-sagemaker-examples/tree/master/advanced_functionality/scikit_bring_your_own) but whole scripts have been simplified so that you can just focus on three scripts below.
 
 * Dockerfile
 * train
