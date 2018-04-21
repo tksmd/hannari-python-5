@@ -2,7 +2,7 @@
 
 This project includes demonstration code for the presentation at [Hannari Python #5](https://hannari-python.connpass.com/event/82672/) at Apr 20th 2018.
 
-This demonstration includes sample code to bring your own algorithm to Amazon SageMaker. The implemented algorithm here is completely same to the one provided by [awslabs](https://github.com/awslabs/amazon-sagemaker-examples/tree/master/advanced_functionality/scikit_bring_your_own) but whole scripts have been simplified so that you can just focus on three scripts below.
+This demonstration includes sample code to bring your own algorithm to [Amazon SageMaker](https://aws.amazon.com/sagemaker/). The implemented algorithm here is completely same to the one provided by [awslabs](https://github.com/awslabs/amazon-sagemaker-examples/tree/master/advanced_functionality/scikit_bring_your_own) but whole scripts have been simplified so that you can just focus on three scripts below.
 
 * Dockerfile
 * train
@@ -16,23 +16,23 @@ This demonstration includes sample code to bring your own algorithm to Amazon Sa
 
 To build docker image, run the following
 
-  docker build -t sagemaker-sklearn-example .
+    docker build -t sagemaker-sklearn-example .
 
 Then, create directories required to run `train` and `serve` scripts like this
 
-  mkdir -p test_dir/{model,output}
+    mkdir -p test_dir/{model,output}
 
 Afterthere, you can run `train` as follows
 
-  docker run -v $(pwd)/test_dir:/opt/ml --rm sagemaker-sklearn-example train
+    docker run -v $(pwd)/test_dir:/opt/ml --rm sagemaker-sklearn-example train
 
 This will generate model under `test_dir/model` and `serve` will use it by
 
-  docker run -v $(pwd)/test_dir:/opt/ml --rm -p 8080:8080 sagemaker-sklearn-example serve
+    docker run -v $(pwd)/test_dir:/opt/ml --rm -p 8080:8080 sagemaker-sklearn-example serve
 
 You can try to call API with 10 samples randomly selected from training data like this
 
-  awk '{print substr($1, 1+index($1, ","))}' test_dir/input/data/train/iris.csv | sort -R | head -10 | curl --data-binary @-  -H "Content-Type: text/csv" -v http://localhost:8080/invocations
+    awk '{print substr($1, 1+index($1, ","))}' test_dir/input/data/train/iris.csv | sort -R | head -10 | curl --data-binary @-  -H "Content-Type: text/csv" -v http://localhost:8080/invocations
 
 ## Bring this to Amazon SageMaker
 
